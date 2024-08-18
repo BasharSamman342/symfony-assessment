@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace App\Controller\V1;
 
+use App\Controller\BaseController;
 use App\Service\CountryService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('countries')]
-class CountryController extends AbstractController
+class CountryController extends BaseController
 {
     protected $countryService;
     public function __construct()
@@ -18,24 +19,19 @@ class CountryController extends AbstractController
     }
     
     #[Route('/{country}', methods: ['GET'])]
-    public function getCountry(): JsonResponse
+    public function getCountry(TranslatorInterface $trans): JsonResponse
     {
         $res = $this->countryService->fetchCountries();
         // return $this->success($res, $trans->trans("symfony_title"));
-        return $this->json([
-            "data"=>$res
-        ]);
+        return $this->success($res, $trans->trans("record_details"));
     }
 
     #[Route('/list', methods: ['GET'])]
-    public function getCountries(): JsonResponse
+    public function getCountries(TranslatorInterface $trans): JsonResponse
     {
         // TODO
         $res = $this->countryService->fetchCountries();
-        // return $this->success($res, $trans->trans("symfony_title"));
-        return $this->json([
-            "data"=>$res
-        ]);
+        return $this->success($res,$trans->trans("record_list"));
     }
 
     #[Route('/', methods: ['POST'])]
