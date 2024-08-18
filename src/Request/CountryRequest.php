@@ -44,7 +44,7 @@ class CountryRequest
         #[Assert\NotNull()]
         public readonly string $demonym,
 
-        #[Assert\Type('array')]
+        #[Assert\Type('string')]
         #[Assert\NotBlank()]
         #[Assert\NotNull()]
         #[AcmeAssert\CurrencyValidator()]
