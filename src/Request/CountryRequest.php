@@ -2,46 +2,52 @@
 
 namespace App\Requests;
 
-use App\Validator\Currency;
-use Symfony\Component\Validator\Constraints\Blank;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as AcmeAssert;
 
-class CountryRequest extends BaseRequest
+
+class CountryRequest 
 {
-    #[Type('string')]
-    #[NotBlank()]
-    #[NotNull()]
-    protected $name;
+    public function __construct(
+        #[Assert\Type('string')]
+        #[Assert\NotBlank()]
+        #[Assert\NotNull()]
+        public readonly string $name,
 
-    #[Type('string')]
-    #[NotBlank()]
-    #[NotNull()]
-    protected $region;
+        #[Assert\Type('string')]
+        #[Assert\NotBlank()]
+        #[Assert\NotNull()]
+        public readonly string $region,
 
-    #[Type('string')]
-    #[Blank()]
-    protected $subRegion;
+        #[Assert\Blank()]
+        #[Assert\IsNull()]
+        public readonly ?string $subRegion,
 
-    #[Type('number')]
-    #[NotBlank()]
-    #[NotNull()]
-    protected $population;
+        #[Assert\Type('number')]
+        #[Assert\Positive()]
+        #[Assert\NotBlank()]
+        #[Assert\NotNull()]
+        public readonly int $population,
 
-    #[Type('string')]
-    #[NotBlank()]
-    #[NotNull()]
-    protected $flag;
+        #[Assert\Type('bool')]
+        #[Assert\NotBlank()]
+        #[Assert\NotNull()]
+        public readonly bool $independent,
 
-    #[Type('string')]
-    #[NotBlank()]
-    #[NotNull()]
-    protected $demonym;
+        #[Assert\Type('string')]
+        #[Assert\NotBlank()]
+        #[Assert\NotNull()]
+        public readonly string $flag,
 
-    #[Type('array')]
-    #[NotBlank()]
-    #[NotNull()]
-    #[Currency()]
-    protected $currency;
+        #[Assert\Type('string')]
+        #[Assert\NotBlank()]
+        #[Assert\NotNull()]
+        public readonly string $demonym,
+
+        #[Assert\Type('array')]
+        #[Assert\NotBlank()]
+        #[Assert\NotNull()]
+        #[AcmeAssert\CurrencyValidator()]
+        public readonly mixed $currency,
+    ){}
 }

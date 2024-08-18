@@ -30,7 +30,7 @@ class Country
     private ?string $demonym = null;
 
     #[ORM\Column(type: Types::BIGINT)]
-    private ?string $population = null;
+    private ?int $population = null;
 
     #[ORM\Column]
     private ?bool $independant = null;
@@ -102,7 +102,7 @@ class Country
         return $this->population;
     }
 
-    public function setPopulation(string $population): static
+    public function setPopulation(int $population): static
     {
         $this->population = $population;
 

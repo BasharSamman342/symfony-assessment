@@ -5,5 +5,6 @@ return [
     "record_created"=>"Record created successfully",
     "record_updated"=>"Record updated successfully",
     "record_deleted"=>"Record deleted successfully",
-    "record_details"=>"Record details"
+    "record_details"=>"Record details",
+    "record_not_found"=>"Record not found"
 ];

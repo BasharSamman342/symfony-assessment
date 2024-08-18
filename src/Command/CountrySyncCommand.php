@@ -30,7 +30,6 @@ class CountrySyncCommand extends Command
     {
         $entityManager = $this->doctrine->getManager();
         $result = $this->countryService->syncData($entityManager);
-        
         return $result?COMMAND::SUCCESS:COMMAND::FAILURE;
     }
 }
