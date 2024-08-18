@@ -3,12 +3,22 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Service\CountryService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 class CountrySyncCommand extends Command
 {
+    private $doctrine;
+    protected $countryService;
+    public function __construct(ManagerRegistry $doctrine)
+    {
+        $this->doctrine = $doctrine;
+        $this->countryService = new CountryService();
+    }
+
     protected function configure(): void
     {
         $this->setName('countries:sync');
@@ -17,6 +27,9 @@ class CountrySyncCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        return COMMAND::SUCCESS;
+        $entityManager = $this->doctrine->getManager();
+        $result = $this->countryService->syncData($entityManager);
+        
+        return $result?COMMAND::SUCCESS:COMMAND::FAILURE;
     }
 }
