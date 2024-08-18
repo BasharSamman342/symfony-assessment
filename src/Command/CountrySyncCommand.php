@@ -17,6 +17,7 @@ class CountrySyncCommand extends Command
     {
         $this->doctrine = $doctrine;
         $this->countryService = new CountryService();
+        parent::__construct();
     }
 
     protected function configure(): void
