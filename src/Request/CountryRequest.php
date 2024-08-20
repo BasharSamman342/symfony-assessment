@@ -19,8 +19,7 @@ class CountryRequest
         #[Assert\NotNull()]
         public readonly string $region,
 
-        #[Assert\Blank()]
-        #[Assert\IsNull()]
+        #[Assert\NotBlank(allowNull:true)]
         public readonly ?string $subRegion,
 
         #[Assert\Type('number')]
@@ -44,10 +43,10 @@ class CountryRequest
         #[Assert\NotNull()]
         public readonly string $demonym,
 
-        #[Assert\Type('string')]
+        #[Assert\Type('array')]
         #[Assert\NotBlank()]
         #[Assert\NotNull()]
         #[AcmeAssert\CurrencyValidator()]
-        public readonly mixed $currency,
+        public readonly array $currency,
     ){}
 }

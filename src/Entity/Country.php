@@ -1,50 +1,48 @@
 <?php
-declare(strict_types=1);
 
 namespace App\Entity;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Uid\Uuid;
+
+use App\Repository\CountryRepository;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 
-
+#[ORM\Entity(repositoryClass: CountryRepository::class)]
 class Country
 {
-
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 255)]
     private ?string $region = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $subRegion = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $demonym = null;
 
     #[ORM\Column(type: Types::BIGINT)]
-    private ?int $population = null;
-
-    #[ORM\Column]
-    private ?bool $independant = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $flag = null;
+    private ?string $population = null;
 
     #[ORM\Column(nullable: true)]
+    private ?bool $independent = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $flag = null;
+
+    #[ORM\Column( nullable: true)]
+    // type: Types::JSON,
     private ?array $currency = null;
 
-    /**
-     * @return int
-     */
-     public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -78,7 +76,7 @@ class Country
         return $this->subRegion;
     }
 
-    public function setSubRegion(string | null $subRegion): static
+    public function setSubRegion(?string $subRegion): static
     {
         $this->subRegion = $subRegion;
 
@@ -90,7 +88,7 @@ class Country
         return $this->demonym;
     }
 
-    public function setDemonym(string | null $demonym): static
+    public function setDemonym(?string $demonym): static
     {
         $this->demonym = $demonym;
 
@@ -109,14 +107,14 @@ class Country
         return $this;
     }
 
-    public function isIndependant(): ?bool
+    public function getIndependent(): ?bool
     {
-        return $this->independant;
+        return $this->independent;
     }
 
-    public function setIndependant(bool $independant): static
+    public function setIndependent(?bool $independent): static
     {
-        $this->independant = $independant;
+        $this->independent = $independent;
 
         return $this;
     }
@@ -126,7 +124,7 @@ class Country
         return $this->flag;
     }
 
-    public function setFlag(string $flag): static
+    public function setFlag(?string $flag): static
     {
         $this->flag = $flag;
 
@@ -144,5 +142,4 @@ class Country
 
         return $this;
     }
-
 }

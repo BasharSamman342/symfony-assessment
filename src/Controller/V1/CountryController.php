@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use OpenApi\Attributes as OA;
 
 #[Route('countries')]
 class CountryController extends BaseController
@@ -40,18 +41,41 @@ class CountryController extends BaseController
     public function getCountry(string $id,TranslatorInterface $trans,EntityManagerInterface $em): JsonResponse
     {
         $repository = $em->getRepository(Country::class);
-        $country = $repository->findOneById($id);
+        $country = $repository->findOneById($id,$trans);
         return $this->success($country, $trans->trans("record_details"));
     }
 
     #[Route('/', methods: ['POST'])]
+    #[OA\Response(
+        response:200,
+        description:"Create new country"
+    )]
+    #[
+        OA\RequestBody(
+            required:true,
+            content: new OA\JsonContent(
+                type: Object::class,
+                example: [
+                    "name"=> "string",
+                    "region"=> "string",
+                    "subRegion"=>null,
+                    "population"=> 1,
+                    "independent"=> true,
+                    "flag"=> "string",
+                    "demonym"=> "string",
+                    "currency"=> ["name"=>"name","symbol"=>"sy"]
+                ]
+            )
+        )
+    ]
+    #[Security(name: 'Bearer')]
     public function addCountry(EntityManagerInterface $em,#[MapRequestPayload] CountryRequest $request,TranslatorInterface $trans)
     {
         $this->model->setName($request->name);
         $this->model->setRegion($request->region);
         $this->model->setSubRegion($request->subRegion);
         $this->model->setPopulation($request->population);
-        $this->model->setIndependant($request->independent);
+        $this->model->setIndependent($request->independent);
         $this->model->setFlag($request->flag);
         $this->model->setDemonym($request->demonym);
         $this->model->setCurrency(
@@ -67,15 +91,38 @@ class CountryController extends BaseController
     }
 
     #[Route('/{country}', methods: ['PATCH'])]
+    #[OA\Response(
+        response:200,
+        description:"Update an existing country"
+    )]
+    #[
+        OA\RequestBody(
+            required:true,
+            content: new OA\JsonContent(
+                type: Object::class,
+                example: [
+                    "name"=> "string",
+                    "region"=> "string",
+                    "subRegion"=>null,
+                    "population"=> 1,
+                    "independent"=> true,
+                    "flag"=> "string",
+                    "demonym"=> "string",
+                    "currency"=> ["name"=>"name","symbol"=>"sy"]
+                ]
+            )
+        )
+    ]
+    #[Security(name: 'Bearer')]
     public function updateCountry(string $country,EntityManagerInterface $em,#[MapRequestPayload] CountryRequest $request,TranslatorInterface $transObj)
     {
         $repository = $em->getRepository(Country::class);
-        $country = $repository->findOneById($country);
+        $country = $repository->findOneById($country,$transObj);
         $country->setName($request->name);
         $country->setRegion($request->region);
         $country->setSubRegion($request->subRegion);
         $country->setPopulation($request->population);
-        $country->setIndependant($request->independent);
+        $country->setIndependent($request->independent);
         $country->setFlag($request->flag);
         $country->setDemonym($request->demonym);
         $country->setCurrency(
@@ -94,7 +141,7 @@ class CountryController extends BaseController
     public function deleteCountry(string $country,EntityManagerInterface $em,TranslatorInterface $transObj): JsonResponse
     {
         $repository = $em->getRepository(Country::class);
-        $country = $repository->findOneById($country);
+        $country = $repository->findOneById($country,$transObj);
         $em->remove($country);
         try {
             $res = $em->flush();

@@ -41,15 +41,13 @@ class CountryService
                 $country->setRegion($data[$i]['region']);
                 $country->setSubRegion($data[$i]['subregion']??null);
                 $country->setPopulation($data[$i]['population']);
-                // $country->setIndependant($data[$i]['independent']);
+                $country->setIndependent($data[$i]['independent']??null);
                 $country->setFlag($data[$i]['flags']['png']);
-                // $country->setDemonym($data[$i]['demonyms']['eng']['m']);
                 $country->setDemonym(
                     array_key_exists("demonyms",$data[$i])==true?
                     $data[$i]['demonyms']['eng']['m']
                     :null
                 );
-                // array_keys((array)$data[$i])[0];
                 $country->setCurrency(
                     array_key_exists("currencies",$data[$i])==true?
                     ['name'=>$data[$i]['currencies'][array_keys((array)$data[$i]['currencies'])[0]]['name'],'symbol'=>$data[$i]['currencies'][array_keys((array)$data[$i]['currencies'])[0]]['symbol']]

@@ -11,6 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CountryRepository extends ServiceEntityRepository
 {
+    
     private $doctrine;
     public function __construct(ManagerRegistry $doctrine)
     {

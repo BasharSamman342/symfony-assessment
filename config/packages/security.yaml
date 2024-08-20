@@ -5,18 +5,29 @@ security:
   # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
   providers:
     # used to reload user from session & other features (e.g. switch_user)
-    backend_users:
-      memory:
-        users:
-          john_admin:
-            { password: "$2y$13$jxGxc ... IuqDju", roles: ["ROLE_ADMIN"] }
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: email
   firewalls:
+    login:
+      pattern: ^/api/v1/login
+      stateless: true
+      json_login:
+        check_path: /api/v1/login_check
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+    api:
+      pattern: ^/api
+      stateless: true
+      jwt: ~
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
     main:
       json_login:
-        check_path: api_login
+        check_path: /api/v1/login_check
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#the-firewall
@@ -27,9 +38,22 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
-    - { path: ^/api/v1/countries, roles: ROLE_ADMIN, methods: [POST] }
-    - { path: ^/api/v1/countries, roles: ROLE_ADMIN, methods: [PATCH] }
-    - { path: ^/api/v1/countries, roles: ROLE_ADMIN, methods: [DELETE] }
+    - { path: ^/api/login, roles: PUBLIC_ACCESS }
+    - {
+        path: ^/api/v1/countries,
+        roles: IS_AUTHENTICATED_FULLY,
+        methods: [POST],
+      }
+    - {
+        path: ^/api/v1/countries,
+        roles: IS_AUTHENTICATED_FULLY,
+        methods: [PATCH],
+      }
+    - {
+        path: ^/api/v1/countries,
+        roles: IS_AUTHENTICATED_FULLY,
+        methods: [DELETE],
+      }
 
 when@test:
   security:

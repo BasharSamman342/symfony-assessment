@@ -30,6 +30,18 @@ class CountrySyncCommand extends Command
     {
         $entityManager = $this->doctrine->getManager();
         $result = $this->countryService->syncData($entityManager);
-        return $result?COMMAND::SUCCESS:COMMAND::FAILURE;
+        
+        $result==true?
+        $output->writeln([
+            '',
+            'Countries from rest countries api synced successfully into DB',
+            '',
+        ]):
+        $output->writeln([
+            '',
+            'Oops! something went wrong',
+            '',
+        ]);
+        return $result==true?COMMAND::SUCCESS:COMMAND::FAILURE;
     }
 }
